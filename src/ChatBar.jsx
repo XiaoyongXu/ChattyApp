@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 
-export function ChatBar (props){
+
+export default function ChatBar (props){
   const addNew = (message)=>{
     const randomString=(length)=> {
       const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'.split('');
