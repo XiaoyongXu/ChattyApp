@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 // import ChatBar from './ChatBar.jsx';
 
 
+
 function Loading() {
   return (
     <h1>Loading messages...</h1>
@@ -29,9 +30,23 @@ function MessageList (props) {
     )
 }
 
+function NavBar(props){
+  if (props.currentUser){
+    return (
+      <nav className="navbar">
+        <a href="/" className="navbar-brand">Chatty</a>
+      </nav>
+    )
+  }else{
+    return (
+      <nav className="navbar">
+        <a href="/" className="navbar-brand">Chatty</a>
+      </nav>
+    )
+  }
+}
 
-
-function ChatBar (props){
+export function ChatBar (props){
   const addNew = (message)=>{
     const randomString=(length)=> {
       const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'.split('');
@@ -71,22 +86,6 @@ function ChatBar (props){
         </footer>
       )
     }
-}
-
-function NavBar(props){
-  if (props.currentUser){
-    return (
-      <nav className="navbar">
-        <a href="/" className="navbar-brand">Chatty</a>
-      </nav>
-    )
-  }else{
-    return (
-      <nav className="navbar">
-        <a href="/" className="navbar-brand">Chatty</a>
-      </nav>
-    )
-  }
 }
 
 class App extends Component {
