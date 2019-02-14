@@ -29,6 +29,8 @@ wss.broadcast = function broadcast(data) {
   });
 };
 
+
+
 wss.on('connection', (ws) => {
   console.log('Client connected');
   ws.on('message', function incoming(data){
@@ -36,25 +38,33 @@ wss.on('connection', (ws) => {
     if (dataParsed.type === "postNotification"){
       dataParsed.type = "incomingNotification";
       dataParsed.id = uuidv1();
-      // wss.clients.forEach(client => {
-      //   if (client.readyState === WebSocket.OPEN) {
-      //     client.send(JSON.stringify(dataParsed));
-      //   }
-      // });
+
       wss.broadcast(JSON.stringify(dataParsed));
     } else if (dataParsed.type === "postMessage"){
       dataParsed.type = "incomingMessage";
       dataParsed.id = uuidv1();
-      // wss.clients.forEach(client => {
-      //   if (client.readyState === WebSocket.OPEN) {
-      //     client.send(JSON.stringify(dataParsed));
-      //   }
-      // });
       wss.broadcast(JSON.stringify(dataParsed));
+    } else if (dataParsed.type === "connected"){
+
+      const userNumber ={
+        type: "connected",
+        number: wss.clients.size
+      }
+      wss.broadcast(JSON.stringify(userNumber));
+    } else {
+
     }
 
 
   })
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
-  ws.on('close', () => console.log('Client disconnected'));
+  ws.on('close', () => {
+    console.log('Client disconnected')
+
+    const userNumber = {
+      type: "connected",
+      number: wss.clients.size
+    }
+    wss.broadcast(JSON.stringify(userNumber));
+  });
 });
