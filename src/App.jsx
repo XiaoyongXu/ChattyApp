@@ -19,37 +19,58 @@ class App extends Component {
   }
   addMessage(newMessage){
     const data = JSON.stringify({
+      type: "postMessage",
       username: newMessage.username,
       content: newMessage.content
     });
-    
+
     this.socket.send(data);
   }
   changeUser(name){
+    const currentName = this.state.currentUser.name;
     if (name !== this.state.currentUser.name){
       this.setState({currentUser:{'name':name}});
+      const content = currentName + " has changed their name to " + name
+      const notification = JSON.stringify({
+        type: "postNotification",
+        content: content
+      });
+      this.socket.send(notification)
     }
-    console.log(this.state);
   }
   componentWillMount(){
-    
+
   }
   componentDidMount() {
     this.socket = new WebSocket('ws://localhost:3001');
     this.socket.onopen = ()=>{
       console.log("connected to the server")
-      this.socket.onmessage = (event)=>{      
-        const finalMessages = this.state.messages.concat(JSON.parse(event.data));
-        this.setState({messages:finalMessages});
-      }
-    }
 
+    }
+    this.socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      switch (data.type) {
+        case "incomingMessage":
+          const finalMessages = this.state.messages.concat(data);
+          this.setState({ messages: finalMessages });
+          break;
+        case "incomingNotification":
+          // handle incoming notification
+          const msgs = this.state.messages.concat(data);
+          this.setState({ messages: msgs });
+          break;
+        default:
+          // show an error in the console if the message type is unknown
+          throw new Error("Unknown event type " + data.type);
+      }
+
+    }
     setTimeout(() => {
-      
+
       this.setState({loading:false})
     }, 1000);
   }
-  
+
   render() {
     return (
       <main className="messages" >
