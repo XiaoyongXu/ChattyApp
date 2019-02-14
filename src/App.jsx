@@ -10,23 +10,26 @@ class App extends Component {
     super(props);
     // this is the *only* time you should assign directly to state:
     this.state = {
-      
       currentUser: {name: 'Bob'}, // optional. if currentUser is not defined, it means the user is Anonymous
       messages:[],
       loading: true
     };
     this.addMessage = this.addMessage.bind(this);
+    this.changeUser = this.changeUser.bind(this);
   }
   addMessage(newMessage){
     const data = JSON.stringify({
       username: newMessage.username,
       content: newMessage.content
     });
-    if (newMessage.username !== this.state.currentUser.name){
-      this.setState({currentUser:{'name':newMessage.username}});
+    
+    this.socket.send(data);
+  }
+  changeUser(name){
+    if (name !== this.state.currentUser.name){
+      this.setState({currentUser:{'name':name}});
     }
     console.log(this.state);
-    this.socket.send(data);
   }
   componentWillMount(){
     
@@ -52,7 +55,7 @@ class App extends Component {
       <main className="messages" >
         < NavBar currentUser={this.state.currentUser}/>
         < MessageList messages={this.state.messages} loading={this.state.loading}/>
-        < ChatBar currentUser={this.state.currentUser} addMessage={this.addMessage}/>
+        < ChatBar currentUser={this.state.currentUser} addMessage={this.addMessage} changeUser={this.changeUser}/>
       </main>
       );
     }

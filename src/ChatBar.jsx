@@ -2,31 +2,29 @@ import React, {Component} from 'react';
 
 
 export default function ChatBar (props){
-  const addNew = (message,user)=>{
-    const newMes = {
-      username: user,
-      content: message
-    }
-    props.addMessage(newMes);
-    props.currentUser.name = user;
-  }
-  
-    const onSubmit = evt => {
-      if(evt.key === 'Enter'){
-        evt.preventDefault();
-        const messageInput = evt.target.value;
-        const userInput = evt.target.parentNode.firstChild.value;
-        // console.log(messageInput);
-        addNew(messageInput,userInput)
+  const onSubmit = evt => {
+    if(evt.key === 'Enter'){
+      evt.preventDefault();
+      const newMes = {
+        username: props.currentUser.name,
+        content: evt.target.value
       }
+      props.addMessage(newMes);
     }
-    if (props.currentUser){
-      return (
-        
-          <footer className="chatbar">
-            <input className="chatbar-username" name="user" defaultValue={props.currentUser.name}/>
-            <input className="chatbar-message" name="message" placeholder="Type a message and hit ENTER" onKeyDown={onSubmit}/> 
-          </footer>   
-      )
+  }
+  const nameOnSubmit = evt => {
+    if(evt.key === 'Enter'){
+      evt.preventDefault();
+      props.changeUser(evt.target.value);
     }
+  }
+  if (props.currentUser){
+    return (
+      
+        <footer className="chatbar">
+          <input className="chatbar-username" name="user" defaultValue={props.currentUser.name} onKeyDown={nameOnSubmit}/>
+          <input className="chatbar-message" name="message" placeholder="Type a message and hit ENTER" onKeyDown={onSubmit}/> 
+        </footer>   
+    )
+  }
 }
