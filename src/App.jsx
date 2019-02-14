@@ -12,37 +12,44 @@ class App extends Component {
     this.state = {
       
       currentUser: {name: 'Bob'}, // optional. if currentUser is not defined, it means the user is Anonymous
-      messages:[
-        {
-          id: 1,
-          username: 'Bob',
-          content: 'Has anyone seen my marbles?',
-        },
-        {
-          id: 2,
-          username: 'Anonymous',
-          content: 'No, I think you lost them. You lost your marbles Bob. You lost them for good.'
-        }
-      ],
+      messages:[],
       loading: true
     };
     this.addMessage = this.addMessage.bind(this);
+    this.add = this.add.bind(this);
   }
   addMessage(newMessage){
+    const data = JSON.stringify({
+      username: newMessage.username,
+      content: newMessage.content
+    });
+    this.socket.send(data);
+  }
+  add(newMessage){
     const oldMessages = this.state.messages;
     const finalMessages = [...oldMessages,newMessage];
-    this.setState({messages:finalMessages})
+    this.setState({messages:finalMessages});
   }
+
   componentWillMount(){
     
   }
   componentDidMount() {
+    this.socket = new WebSocket('ws://localhost:3001');
+    this.socket.onopen = ()=>{
+      console.log("connected to the server")
+      this.socket.onmessage = (event)=>{
+        console.log(event.data);
+        this.add(JSON.parse(event.data));
+        console.log(this.state);
+
+      }
+    }
 
     setTimeout(() => {
-      const newMessage = {id: 3, username: "Michelle", content: "Hello there!"};
-      const messages = this.state.messages.concat(newMessage)
-      this.setState({messages: messages,loading:false})
-    }, 2000);
+      
+      this.setState({loading:false})
+    }, 1000);
   }
   
   render() {
