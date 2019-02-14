@@ -19,7 +19,6 @@ Open one Terminal, install the dependencies and start the front-end server.
 ```
 npm install
 npm start
-open http://localhost:3000
 ```
 Open another Terminal, install the dependencies and start the back-end server.
 
@@ -27,6 +26,10 @@ Open another Terminal, install the dependencies and start the back-end server.
 cd chatty_server
 npm install
 npm start
+```
+
+Open the browser
+```
 open http://localhost:3000
 ```
 
