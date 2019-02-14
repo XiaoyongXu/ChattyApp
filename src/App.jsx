@@ -16,21 +16,18 @@ class App extends Component {
       loading: true
     };
     this.addMessage = this.addMessage.bind(this);
-    this.add = this.add.bind(this);
   }
   addMessage(newMessage){
     const data = JSON.stringify({
       username: newMessage.username,
       content: newMessage.content
     });
+    if (newMessage.username !== this.state.currentUser.name){
+      this.setState({currentUser:{'name':newMessage.username}});
+    }
+    console.log(this.state);
     this.socket.send(data);
   }
-  add(newMessage){
-    const oldMessages = this.state.messages;
-    const finalMessages = [...oldMessages,newMessage];
-    this.setState({messages:finalMessages});
-  }
-
   componentWillMount(){
     
   }
@@ -38,11 +35,9 @@ class App extends Component {
     this.socket = new WebSocket('ws://localhost:3001');
     this.socket.onopen = ()=>{
       console.log("connected to the server")
-      this.socket.onmessage = (event)=>{
-        console.log(event.data);
-        this.add(JSON.parse(event.data));
-        console.log(this.state);
-
+      this.socket.onmessage = (event)=>{      
+        const finalMessages = this.state.messages.concat(JSON.parse(event.data));
+        this.setState({messages:finalMessages});
       }
     }
 
