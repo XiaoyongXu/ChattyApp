@@ -1,5 +1,6 @@
 # ChattyApp
-=====================
+
+### Description
 
 A muti-users real-time communication app.
 
