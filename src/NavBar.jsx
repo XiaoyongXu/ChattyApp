@@ -8,8 +8,6 @@ export default function NavBar(props){
         <a href="/" className="navbar-brand">Chatty</a>
         <a className="navbar-user">{props.number} users online</a>
       </div>
-
     </nav>
   )
-
 }

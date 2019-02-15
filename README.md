@@ -1,7 +1,7 @@
-React Boilerplate
+# ChattyApp
 =====================
 
-A minimal and light dev environment for ReactJS.
+A muti-users real-time communication app.
 
 ### Usage
 
